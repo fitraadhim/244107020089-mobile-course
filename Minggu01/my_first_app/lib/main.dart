@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(title: const Text('Profil Mahasiswa')),
-        body: const Center(
+        body: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -23,6 +23,16 @@ class MyApp extends StatelessWidget {
               Text(
                 'Nama Anda: Muhammad Fitra Adhim Nurrochman',
                 style: TextStyle(fontSize: 24),
+              ),
+              Text(
+                'NIM: 244107020089',
+                style: TextStyle(fontSize: 24),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  print('Tombol ditekan pada aplikasi');
+                },
+                child: Text('Klik saya untuk menampilkan pesan di console'),
               ),
               Text('Pemrograman Mobile - Minggu 1'),
             ],
