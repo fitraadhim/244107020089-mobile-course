@@ -41,12 +41,14 @@ class DashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Student Dashboard'),
+        title: const Text('Academic Overview'),
         actions: [
           Row(
             children: [
               Icon(isDark ? Icons.dark_mode : Icons.light_mode),
               const SizedBox(width: 4),
+              Text(isDark ? 'Dark mode' : 'Light mode'),
+              const SizedBox(width: 8),
               Semantics(
                 label: 'Pengaturan tema gelap',
                 hint: 'Aktifkan atau nonaktifkan mode gelap',
@@ -63,19 +65,57 @@ class DashboardPage extends StatelessWidget {
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
-          final crossAxisCount = constraints.maxWidth >= 700 ? 3 : 2;
+          final crossAxisCount = constraints.maxWidth >= 200 ? 2 : 1;
 
-          return GridView.count(
+          return Padding(
             padding: const EdgeInsets.all(16),
-            crossAxisCount: crossAxisCount,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
-            children: const [
-              DashboardCard(title: 'Courses', value: '6'),
-              DashboardCard(title: 'Assignments', value: '12'),
-              DashboardCard(title: 'Attendance', value: '92%'),
-              DashboardCard(title: 'Progress', value: '78%'),
-            ],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Semantics(
+                  label: 'Profil mahasiswa Fitra Adhim, semester 4',
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    color: Theme.of(context).colorScheme.surfaceContainer,
+                    child: const Row(
+                      children: [
+                        CircleAvatar(child: Icon(Icons.person)),
+                        SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Fitra Adhim'),
+                              Text('Semester 5 - Teknik Informatika'),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Text('My Academic Information'),
+                const SizedBox(height: 8),
+                Expanded(
+                  child: GridView.count(
+                    crossAxisCount: crossAxisCount,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    children: const [
+                      DashboardCard(title: 'Courses', value: '6'),
+                      DashboardCard(title: 'Assignments', value: '12'),
+                      DashboardCard(title: 'Attendance', value: '92%'),
+                      DashboardCard(title: 'Progress', value: '78%'),
+                      DashboardCard(title: 'GPA', value: '3.75'),
+                      DashboardCard(title: 'Credits', value: '84'),
+                      DashboardCard(title: 'Exams', value: '3'),
+                      DashboardCard(title: 'Activities', value: '5'),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           );
         },
       ),

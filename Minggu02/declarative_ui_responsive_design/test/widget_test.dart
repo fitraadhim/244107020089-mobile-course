@@ -13,7 +13,8 @@ void main() {
   testWidgets('dashboard renders', (WidgetTester tester) async {
     await tester.pumpWidget(const DashboardApp());
 
-    expect(find.text('Student Dashboard'), findsOneWidget);
+    expect(find.text('Academic Overview'), findsOneWidget);
+    expect(find.text('Fitra Adhim'), findsOneWidget);
     expect(find.text('Courses'), findsOneWidget);
     expect(find.text('Assignments'), findsOneWidget);
   });
