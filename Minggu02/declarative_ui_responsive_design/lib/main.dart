@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+const kWideBreakpoint = 700.0;
+
 void main() => runApp(const DashboardApp());
 
 class DashboardApp extends StatefulWidget {
@@ -47,7 +49,10 @@ class DashboardPage extends StatelessWidget {
             children: [
               Icon(isDark ? Icons.dark_mode : Icons.light_mode),
               const SizedBox(width: 4),
-              Text(isDark ? 'Dark mode' : 'Light mode'),
+              Text(
+                isDark ? 'Dark mode' : 'Light mode',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
               const SizedBox(width: 8),
               Semantics(
                 label: 'Pengaturan tema gelap',
@@ -65,7 +70,7 @@ class DashboardPage extends StatelessWidget {
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
-          final crossAxisCount = constraints.maxWidth >= 200 ? 2 : 1;
+          final crossAxisCount = constraints.maxWidth >= kWideBreakpoint ? 2 : 1;
 
           return Padding(
             padding: const EdgeInsets.all(16),
@@ -95,7 +100,10 @@ class DashboardPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-                const Text('My Academic Information'),
+                Text(
+                  'My Academic Information',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
                 const SizedBox(height: 8),
                 Expanded(
                   child: GridView.count(
@@ -103,14 +111,14 @@ class DashboardPage extends StatelessWidget {
                     crossAxisSpacing: 12,
                     mainAxisSpacing: 12,
                     children: const [
-                      DashboardCard(title: 'Courses', value: '6'),
-                      DashboardCard(title: 'Assignments', value: '12'),
-                      DashboardCard(title: 'Attendance', value: '92%'),
-                      DashboardCard(title: 'Progress', value: '78%'),
-                      DashboardCard(title: 'GPA', value: '3.75'),
-                      DashboardCard(title: 'Credits', value: '84'),
-                      DashboardCard(title: 'Exams', value: '3'),
-                      DashboardCard(title: 'Activities', value: '5'),
+                      InfoCard(title: 'Courses', value: '6'),
+                      InfoCard(title: 'Assignments', value: '12'),
+                      InfoCard(title: 'Attendance', value: '92%'),
+                      InfoCard(title: 'Progress', value: '78%'),
+                      InfoCard(title: 'GPA', value: '3.75'),
+                      InfoCard(title: 'Credits', value: '84'),
+                      InfoCard(title: 'Exams', value: '3'),
+                      InfoCard(title: 'Activities', value: '5'),
                     ],
                   ),
                 ),
@@ -123,8 +131,8 @@ class DashboardPage extends StatelessWidget {
   }
 }
 
-class DashboardCard extends StatelessWidget {
-  const DashboardCard({required this.title, required this.value, super.key});
+class InfoCard extends StatelessWidget {
+  const InfoCard({required this.title, required this.value, super.key});
   final String title;
   final String value;
 
@@ -133,12 +141,23 @@ class DashboardCard extends StatelessWidget {
     return Semantics(
       label: '$title: $value',
       child: Card(
+        color: Theme.of(context).colorScheme.surfaceContainer,
         child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Row(children: [
-            Expanded(child: Text(title)),
-            Text(value, style: Theme.of(context).textTheme.headlineSmall),
-          ]),
+          padding: EdgeInsets.all(Theme.of(context).visualDensity.baseSizeAdjustment.dy.abs() + 16),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  title,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ),
+              Text(
+                value,
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+            ],
+          ),
         ),
       ),
     );
