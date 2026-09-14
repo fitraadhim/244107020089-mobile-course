@@ -8,22 +8,31 @@ class StatsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final todos = ref.watch(todoListProvider);
-    final incompleteTodos = ref.watch(incompleteTodosProvider);
-    final completedCount = todos.where((todo) => todo.done).length;
-    final stats = [
-      'Total tugas: ${todos.length}',
-      'Belum selesai: ${incompleteTodos.length}',
-      'Selesai: $completedCount',
-    ];
+    final statsAsync = ref.watch(statsProvider);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Statistik ToDo')),
-      body: ListView.builder(
-        itemCount: stats.length,
-        itemBuilder: (context, index) => ListTile(
-          leading: const Icon(Icons.insights),
-          title: Text(stats[index]),
+      body: statsAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stackTrace) => Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Gagal memuat statistik: $error'),
+              const SizedBox(height: 12),
+              FilledButton(
+                onPressed: () => ref.invalidate(statsProvider),
+                child: const Text('Coba lagi'),
+              ),
+            ],
+          ),
+        ),
+        data: (stats) => ListView.builder(
+          itemCount: stats.length,
+          itemBuilder: (context, index) => ListTile(
+            leading: const Icon(Icons.insights),
+            title: Text(stats[index]),
+          ),
         ),
       ),
     );

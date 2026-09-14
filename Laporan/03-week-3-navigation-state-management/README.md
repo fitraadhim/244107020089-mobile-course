@@ -77,3 +77,38 @@ Checklist verifikasi mandiri
 
 TUGAS, REFLEKSI, DAN REFERENSI
 
+Mini project
+Bangun aplikasi ToDo dengan navigasi dan Riverpod sebagai tugas minggu ini:
+
+- Minimal 2 halaman dengan GoRouter: daftar tugas, halaman detail/statistik.
+    1. ![alt text](screenshots/Screenshot_2026-09-14-23-03-09-891_com.example.week3_todo.jpg)
+    2. ![alt text](screenshots/Screenshot_2026-09-14-23-04-19-010_com.example.week3_todo.jpg)
+- State dikelola Riverpod (Notifier), UI menggunakan ConsumerWidget.
+    1. sukses
+    2. ![alt text](<screenshots/Screenshot 2026-09-14 232346.png>)
+    3. ![alt text](<screenshots/Screenshot 2026-09-14 232424.png>)
+- Tambahkan fitur simulasi asinkron dengan AsyncValue: state loading, error, dan success tampil dengan benar.
+    1. sukses
+    2. ![alt text](<screenshots/Screenshot 2026-09-14 232905.png>)
+- Sertakan minimal 1 unit/widget test yang lulus.
+    1. sukses
+- Kerjakan bagian AI Challenge dan dokumentasikan prompt, hasil AI, perbaikan, serta alasan keputusan teknis Anda.
+    1. sukses flutter test
+- Push ke repository portfolio pada folder 03-week-3-navigation-state-management/ dengan struktur lib/, test/, README.md, dan screenshots/. README menjelaskan tujuan, fitur utama, stack teknologi, cara menjalankan, dan hasil yang dicapai.
+
+REFLEKSI
+
+1. Kapan setState masih cukup, dan kapan state harus naik ke Riverpod?
+2. Apa perbedaan context.go dan context.push, dan kapan masing-masing tepat digunakan?
+3. Bagaimana AsyncValue mencegah bug dibanding tiga boolean terpisah?
+4. Bagian mana dari hasil AI yang Anda perbaiki, dan mengapa?
+
+Jawaban
+
+1. Menurut saya, setState masih cukup untuk perubahan kecil yang hanya dipakai oleh satu halaman, misalnya membuka atau menutup tampilan. Kalau state dipakai oleh beberapa halaman atau perlu dikelola lebih teratur, state sebaiknya dinaikkan ke Riverpod.
+
+2. context.go digunakan untuk pindah ke route tertentu dan mengganti route yang sedang aktif. context.push digunakan untuk menambahkan halaman baru ke stack, sehingga halaman sebelumnya masih bisa kembali dengan tombol back. Jadi context.go cocok untuk menu utama, sedangkan context.push cocok untuk halaman detail.
+
+3. AsyncValue membuat state loading, error, dan success berada dalam satu state yang jelas. Dengan tiga boolean terpisah, bisa terjadi kombinasi yang tidak sesuai, misalnya isLoading dan hasError sama-sama true. AsyncValue membantu mengurangi kemungkinan bug seperti itu.
+
+4. Bagian AI yang saya perbaiki adalah penggunaan provider, pemisahan TodoTile, filter Todo, dan penanganan state AsyncValue. Saya memperbaikinya supaya kode lebih rapi, state tidak dimutasi langsung, dan kondisi loading, error, serta success bisa terlihat dengan jelas.
