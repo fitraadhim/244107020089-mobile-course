@@ -1,24 +1,41 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ProductsNotifier extends AsyncNotifier<List<String>> {
+class Todo {
+  Todo(this.title, {this.done = false});
+
+  final String title;
+  final bool done;
+
+  Todo copyWith({String? title, bool? done}) =>
+      Todo(title ?? this.title, done: done ?? this.done);
+}
+
+class TodoListNotifier extends Notifier<List<Todo>> {
   @override
-  Future<List<String>> build() async {
-    await Future.delayed(const Duration(seconds: 2));
-    return ['Keyboard', 'Mouse', 'Monitor'];
+  List<Todo> build() => [
+        Todo('Belajar Riverpod'),
+        Todo('Mencoba GoRouter'),
+        Todo('Menulis unit test', done: true),
+      ];
+
+  void add(String title) => state = [...state, Todo(title)];
+
+  void toggle(int index) {
+    final todos = [...state];
+    todos[index] = todos[index].copyWith(done: !todos[index].done);
+    state = todos;
   }
 
-  Future<void> refresh() async {
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(_fetch);
-  }
-
-  Future<List<String>> _fetch() async {
-    await Future.delayed(const Duration(seconds: 1));
-    return ['Keyboard', 'Mouse', 'Monitor', 'Headset'];
+  void remove(int index) {
+    final todos = [...state]..removeAt(index);
+    state = todos;
   }
 }
 
-final productsProvider =
-    AsyncNotifierProvider<ProductsNotifier, List<String>>(
-  ProductsNotifier.new,
-);
+final todoListProvider =
+    NotifierProvider<TodoListNotifier, List<Todo>>(TodoListNotifier.new);
+
+final incompleteTodosProvider = Provider<List<Todo>>((ref) {
+  final todos = ref.watch(todoListProvider);
+  return todos.where((todo) => !todo.done).toList(growable: false);
+});
