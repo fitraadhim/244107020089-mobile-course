@@ -4,7 +4,7 @@ class ProductsNotifier extends AsyncNotifier<List<String>> {
   @override
   Future<List<String>> build() async {
     await Future.delayed(const Duration(seconds: 2));
-    throw Exception('Gagal terhubung ke server');
+    return ['Keyboard', 'Mouse', 'Monitor'];
   }
 
   Future<void> refresh() async {
