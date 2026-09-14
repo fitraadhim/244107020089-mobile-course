@@ -6,3 +6,6 @@ PRAKTIKUM 1
 PRAKTIKUM 2
 ![alt text](<screenshots/Screenshot 2026-09-14 221311.png>)
 
+PRAKTIKUM 3
+1. ![alt text](<screenshots/Screenshot 2026-09-14 222432.png>)
+2. 
