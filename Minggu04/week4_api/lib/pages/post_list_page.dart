@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../data/network_errors.dart';
 import '../data/providers.dart';
 import '../widgets/post_tile.dart';
 

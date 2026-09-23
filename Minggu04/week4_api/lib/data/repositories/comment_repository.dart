@@ -13,9 +13,9 @@ class CommentRepository {
     final response = await _dio.get<List>(
       '/comments',
       queryParameters: {'postId': postId},
-      options: const Options(
-        sendTimeout: Duration(seconds: 10),
-        receiveTimeout: Duration(seconds: 10),
+      options: Options(
+        sendTimeout: const Duration(seconds: 10),
+        receiveTimeout: const Duration(seconds: 10),
       ),
     );
 
