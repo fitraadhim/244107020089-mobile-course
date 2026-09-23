@@ -98,5 +98,21 @@ Implementasi dibuat pada project Flutter [Minggu04/hola](../../Minggu04/hola).
   - Unit test model `Post.fromJson` untuk field null atau malformed.
   - Provider test menggunakan `FakePostRepository` untuk menguji pagination dan guard request ganda.
   - Hasil `flutter test`: `00:01 +2: All tests passed!`.
-6. diatas
- 
+6. diatas 
+
+## REFLEKSI
+
+1. Mengapa UI dilarang memanggil Dio langsung? Apa yang rusak jika aturan ini dilanggar?
+2. Kapan pagination client-side cukup, dan kapan harus mengandalkan pagination server (_page/_limit)?
+3. Bagaimana exception repository berubah menjadi AsyncError tanpa try/catch di setiap widget? Kapan try/catch eksplisit tetap dibutuhkan?
+4. Bagian mana dari hasil AI yang Anda perbaiki, dan mengapa?
+
+### Jawaban
+
+1. UI tidak memanggil Dio langsung agar UI hanya mengurus tampilan dan interaksi. Jika dilanggar, kode menjadi sulit diuji, error handling tersebar di banyak widget, dan perubahan endpoint atau konfigurasi HTTP harus dilakukan berulang kali. Repository menjadi tempat khusus untuk komunikasi API dan mapping error.
+
+2. Pagination client-side cukup jika seluruh data sedikit dan sudah tersedia di aplikasi. Pagination server dengan `_page` dan `_limit` lebih tepat jika data besar atau terus bertambah karena hanya mengambil data yang diperlukan, menghemat memori dan bandwidth, serta mempercepat tampilan awal.
+
+3. Pada `AsyncNotifier`, exception yang dilempar dari method async akan mengubah state provider menjadi `AsyncError`, sehingga widget cukup membaca state `loading`, `data`, atau `error`. `try/catch` eksplisit tetap dibutuhkan ketika ingin mengubah `DioException` menjadi pesan ramah pengguna, melakukan retry, logging, atau memberi fallback. Pada project ini, provider memakai `Notifier` biasa sehingga exception ditangkap dan disimpan sebagai `errorMessage` secara manual.
+
+4. Hasil AI saya sesuaikan dari contoh endpoint `comments` menjadi aplikasi daftar `posts` sesuai tugas utama. Saya juga menambahkan infinite scroll 10 item per halaman, guard request ganda, empat state UI, serta provider test dengan `FakePostRepository`. Perubahan ini diperlukan agar implementasi memenuhi seluruh requirement mini project dan dapat diuji tanpa memanggil API nyata.
