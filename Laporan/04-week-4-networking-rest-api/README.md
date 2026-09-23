@@ -9,3 +9,9 @@ setelah dinyalakan dan di coba kembali
 ![alt text](<screenshots/Screenshot 2026-09-23 142904.png>)
 3. ini adalah hasilnya jika baseUrl diubah dengan url yang salah
 ![alt text](<screenshots/Screenshot 2026-09-23 143035.png>)
+
+PRAKTIKUM 3
+
+![alt text](<screenshots/Screenshot 2026-09-23 150140.png>)
+
+AI Challenge
