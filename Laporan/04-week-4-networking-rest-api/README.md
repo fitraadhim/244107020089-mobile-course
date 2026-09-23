@@ -67,3 +67,36 @@ Catatan implementasi:
 - `friendlyErrorMessage` memeriksa `DioExceptionType.connectionError` dan memastikan pesan menggunakan kata `terhubung`.
 - Provider test menggunakan `ProviderContainer` dan `overrideWithValue` agar repository palsu dapat menggantikan repository asli tanpa memanggil HTTP nyata.
 - Helper `readPostsOnce` dan `readPostsErrorOnce` dipakai untuk menguji state success dan state error secara konsisten.
+
+TUGAS
+
+## MINI PROJECT / INDUSTRY CHALLENGE
+
+Implementasi dibuat pada project Flutter [Minggu04/hola](../../Minggu04/hola).
+
+1. **REST API dan Riverpod**
+  - Mengambil data dari JSONPlaceholder endpoint `GET /posts`.
+  - Data ditampilkan ke UI melalui `PostRepository` dan `flutter_riverpod`.
+
+2. **Dio dan model**
+  - Dio dibuat terpusat di `ApiClient` dengan base URL JSONPlaceholder.
+  - Menggunakan timeout 10 detik dan `LogInterceptor`.
+  - `Post.fromJson` aman terhadap field atau nilai null.
+
+3. **Empat state UI**
+  - `Loading`: menampilkan indikator loading.
+  - `Error`: menampilkan pesan error dan tombol `Retry`.
+  - `Empty`: menampilkan pesan ketika API mengembalikan data kosong.
+  - `Success`: menampilkan daftar post.
+
+4. **Pagination**
+  - Infinite scroll menggunakan 10 item per halaman dengan parameter `_page` dan `_limit`.
+  - Flag `isLoadingMore` mencegah request ganda.
+  - Flag `hasReachedEnd` menghentikan request ketika data sudah habis.
+
+5. **Pengujian**
+  - Unit test model `Post.fromJson` untuk field null atau malformed.
+  - Provider test menggunakan `FakePostRepository` untuk menguji pagination dan guard request ganda.
+  - Hasil `flutter test`: `00:01 +2: All tests passed!`.
+6. diatas
+ 
