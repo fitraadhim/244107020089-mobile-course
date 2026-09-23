@@ -51,3 +51,19 @@ Requirements:
 - Satu unit test untuk fromJson dengan field yang hilang.
 Jelaskan setiap bagian kode dalam komentar.
 ```
+
+## Checklist verifikasi mandiri
+
+- [x] UI tidak memanggil Dio langsung, semua akses data lewat repository + provider.
+- [x] Empat state tampil benar: loading, error (+ retry), empty, success.
+- [x] Pagination: data bertambah saat scroll, tidak ada request ganda, ada indikator akhir data.
+- [x] `flutter analyze` tanpa issue dan semua test lulus.
+- [x] Hasil AI diverifikasi dan didokumentasikan pada folder `docs/`.
+
+Catatan implementasi:
+
+- Struktur test akhir memuat: `import 'package:flutter_test/flutter_test.dart';` + `FakePostRepository` + `main()` dengan 4 skenario uji.
+- `fromJson` aman terhadap field yang hilang, dengan fallback nilai default untuk `id`, `title`, dan `userId`.
+- `friendlyErrorMessage` memeriksa `DioExceptionType.connectionError` dan memastikan pesan menggunakan kata `terhubung`.
+- Provider test menggunakan `ProviderContainer` dan `overrideWithValue` agar repository palsu dapat menggantikan repository asli tanpa memanggil HTTP nyata.
+- Helper `readPostsOnce` dan `readPostsErrorOnce` dipakai untuk menguji state success dan state error secara konsisten.
