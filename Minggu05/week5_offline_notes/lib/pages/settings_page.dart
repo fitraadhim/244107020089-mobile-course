@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../providers.dart';
 
 class SettingsPage extends ConsumerWidget {
@@ -23,9 +24,8 @@ class SettingsPage extends ConsumerWidget {
             title: const Text('Force offline'),
             subtitle: const Text('Gunakan cache dan jangan akses jaringan'),
             value: forceOffline,
-            onChanged: (value) => ref
-                .read(forceOfflineProvider.notifier)
-                .setEnabled(value),
+            onChanged: (value) =>
+                ref.read(forceOfflineProvider.notifier).setEnabled(value),
           ),
         ],
       ),

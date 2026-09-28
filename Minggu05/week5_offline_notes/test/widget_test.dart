@@ -12,9 +12,7 @@ import 'package:week5_offline_notes/main.dart';
 
 void main() {
   testWidgets('Offline Notes app renders', (WidgetTester tester) async {
-    await tester.pumpWidget(
-      const ProviderScope(child: OfflineNotesApp()),
-    );
+    await tester.pumpWidget(const ProviderScope(child: OfflineNotesApp()));
     await tester.pump();
 
     expect(find.text('Offline Notes'), findsOneWidget);

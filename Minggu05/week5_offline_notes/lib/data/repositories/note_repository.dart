@@ -1,17 +1,13 @@
 import 'package:sqflite/sqflite.dart';
+
 import '../local/db.dart';
 import '../local/note.dart';
-import '../remote/posts_api.dart';
 
 class NoteRepository {
-  NoteRepository({
-    Future<Database> Function()? openDb,
-    PostsApi? postsApi,
-  })  : _openDb = openDb ?? openNotesDb,
-        _postsApi = postsApi ?? PostsApi();
+  NoteRepository({Future<Database> Function()? openDb})
+    : _openDb = openDb ?? openNotesDb;
 
   final Future<Database> Function() _openDb;
-  final PostsApi _postsApi;
 
   Future<List<Note>> fetchNotes() async {
     final db = await _openDb();
@@ -42,37 +38,33 @@ class NoteRepository {
     await db.delete('notes', where: 'id = ?', whereArgs: [id]);
   }
 
-  Future<int> countDirty() async {
+  Future<void> updateNote({
+    required int id,
+    required String title,
+    required String body,
+  }) async {
     final db = await _openDb();
-    final rows = await db.rawQuery(
-        'SELECT COUNT(*) AS c FROM notes WHERE dirty = 1');
-    return ((rows.first['c'] as num?)?.toInt() ?? 0);
+    await db.update(
+      'notes',
+      {
+        'title': title,
+        'body': body,
+        'updated_at': DateTime.now().toIso8601String(),
+        'dirty': 1,
+      },
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 
-  Future<void> markAllSynced() async {
+  Future<Note?> fetchNoteById(int id) async {
     final db = await _openDb();
-    await db.update('notes', {'dirty': 0}, where: 'dirty = 1');
-  }
-
-  Future<List<Post>> readCachedPosts() async {
-    final db = await _openDb();
-    final rows = await db.query('cached_posts', orderBy: 'id ASC');
-    return rows.map(Post.fromCache).toList();
-  }
-
-  Future<List<Post>> refreshPosts() async {
-    final posts = await _postsApi.fetchPosts();
-    final db = await _openDb();
-    await db.transaction((transaction) async {
-      await transaction.delete('cached_posts');
-      for (final post in posts) {
-        await transaction.insert(
-          'cached_posts',
-          post.toCacheMap(),
-          conflictAlgorithm: ConflictAlgorithm.replace,
-        );
-      }
-    });
-    return posts;
+    final rows = await db.query(
+      'notes',
+      where: 'id = ?',
+      whereArgs: [id],
+      limit: 1,
+    );
+    return rows.isEmpty ? null : Note.fromMap(rows.first);
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'data/local/note.dart';
 import 'data/prefs.dart';
 import 'data/repositories/note_repository.dart';
+import 'data/sync.dart';
 
 final prefsRepositoryProvider = Provider<PrefsRepository>(
   (ref) => PrefsRepository(),
@@ -12,15 +13,23 @@ final prefsRepositoryProvider = Provider<PrefsRepository>(
 final noteRepositoryProvider = Provider<NoteRepository>(
   (ref) => NoteRepository(),
 );
+final syncServiceProvider = Provider<SyncService>((ref) => SyncService());
 
-final darkModeProvider =
-    AsyncNotifierProvider<DarkModeNotifier, bool>(DarkModeNotifier.new);
-final forceOfflineProvider =
-    AsyncNotifierProvider<ForceOfflineNotifier, bool>(ForceOfflineNotifier.new);
-final notesProvider =
-    AsyncNotifierProvider<NotesNotifier, List<Note>>(NotesNotifier.new);
-final postsProvider =
-    AsyncNotifierProvider<PostsNotifier, List<Post>>(PostsNotifier.new);
+final darkModeProvider = AsyncNotifierProvider<DarkModeNotifier, bool>(
+  DarkModeNotifier.new,
+);
+final forceOfflineProvider = AsyncNotifierProvider<ForceOfflineNotifier, bool>(
+  ForceOfflineNotifier.new,
+);
+final notesProvider = AsyncNotifierProvider<NotesNotifier, List<Note>>(
+  NotesNotifier.new,
+);
+final postsProvider = AsyncNotifierProvider<PostsNotifier, List<Post>>(
+  PostsNotifier.new,
+);
+final noteDetailProvider = FutureProvider.family<Note?, int>(
+  (ref, id) => ref.watch(noteRepositoryProvider).fetchNoteById(id),
+);
 
 class DarkModeNotifier extends AsyncNotifier<bool> {
   @override
@@ -66,22 +75,29 @@ class NotesNotifier extends AsyncNotifier<List<Note>> {
     ref.invalidateSelf();
   }
 
+  Future<void> edit({
+    required int id,
+    required String title,
+    required String body,
+  }) async {
+    await _repository.updateNote(id: id, title: title, body: body);
+    ref.invalidateSelf();
+    ref.invalidate(noteDetailProvider(id));
+  }
+
   Future<int> sync() async {
-    final count = await _repository.countDirty();
-    if (count == 0) return 0;
-    await Future<void>.delayed(const Duration(seconds: 1));
-    await _repository.markAllSynced();
+    final count = await ref.read(syncServiceProvider).syncNotes();
     ref.invalidateSelf();
     return count;
   }
 }
 
 class PostsNotifier extends AsyncNotifier<List<Post>> {
-  NoteRepository get _repository => ref.read(noteRepositoryProvider);
+  SyncService get _syncService => ref.read(syncServiceProvider);
 
   @override
   Future<List<Post>> build() async {
-    final cached = await _repository.readCachedPosts();
+    final cached = await _syncService.cachePosts(refresh: false);
     if (!(await ref.watch(forceOfflineProvider.future))) {
       unawaited(_refreshInBackground());
     }
@@ -90,7 +106,7 @@ class PostsNotifier extends AsyncNotifier<List<Post>> {
 
   Future<void> _refreshInBackground() async {
     try {
-      final posts = await _repository.refreshPosts();
+      final posts = await _syncService.cachePosts();
       state = AsyncData(posts);
     } catch (_) {
       // Cached data remains visible when the network is unavailable.
@@ -100,6 +116,6 @@ class PostsNotifier extends AsyncNotifier<List<Post>> {
   Future<void> refresh() async {
     if (await ref.read(forceOfflineProvider.future)) return;
     state = const AsyncLoading();
-    state = await AsyncValue.guard(_repository.refreshPosts);
+    state = await AsyncValue.guard(_syncService.cachePosts);
   }
 }
