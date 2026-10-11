@@ -1,42 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:dio/dio.dart';
 
+import 'app/router.dart';
+import 'features/notifications/presentation/providers/notification_providers.dart';
 import 'messaging/push_service.dart';
-import 'data/api_client.dart';
-import 'providers/auth_provider.dart';
-import 'pages/login_page.dart';
-import 'pages/home_page.dart';
-import 'pages/announcement_page.dart';
 import 'routes.dart';
-
-final routerProvider = Provider<GoRouter>((ref) {
-  final authAsync = ref.watch(authStateProvider);
-  final loggedIn = authAsync.value ?? false;
-
-  return GoRouter(
-    redirect: (context, state) {
-      final goingLogin = state.matchedLocation == AppRoutes.login;
-      if (!loggedIn && !goingLogin) return AppRoutes.login;
-      if (loggedIn && goingLogin) return AppRoutes.home;
-      return null;
-    },
-    routes: [
-      GoRoute(path: AppRoutes.login, builder: (_, _) => const LoginPage()),
-      GoRoute(path: AppRoutes.home, builder: (_, _) => const HomePage()),
-      GoRoute(
-        path: AppRoutes.announcement,
-        builder: (_, s) => AnnouncementPage(id: s.pathParameters['id'] ?? ''),
-      ),
-    ],
-  );
-});
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage _) async {
@@ -47,9 +19,6 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage _) async {
 void registerBackgroundHandler() {
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 }
-
-String formatTokenForDebug(String token) =>
-    token.length > 12 ? '${token.substring(0, 12)}...' : token;
 
 void listenForeground(void Function(String route) onRoute) {
   FirebaseMessaging.onMessage.listen((message) async {
@@ -70,26 +39,6 @@ Future<void> handleTerminated(void Function(String route) onRoute) async {
   if (route != null && route.isNotEmpty) onRoute(route);
 }
 
-String _currentPlatformName() => switch (defaultTargetPlatform) {
-  TargetPlatform.android => 'android',
-  TargetPlatform.iOS => 'ios',
-  _ => 'unknown',
-};
-
-Future<void> _registerFcmToken(Dio dio, String token) async {
-  try {
-    await dio.post(
-      '/devices',
-      data: {'fcm_token': token, 'platform': _currentPlatformName()},
-    );
-  } on DioException catch (error) {
-    debugPrint(
-      'FCM token registration failed '
-      '(type: ${error.type}, status: ${error.response?.statusCode ?? 'none'}).',
-    );
-  }
-}
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -103,23 +52,12 @@ void main() async {
 
   // 3. Buat ProviderContainer agar state Riverpod bisa diisi sebelum UI muncul
   final container = ProviderContainer();
-  final dio = buildApiClient(
-    container.read(tokenStoreProvider),
-    container.read(authRepositoryProvider),
-    onSessionExpired: () => container.invalidate(authStateProvider),
-  );
+  final fcmTokenService = container.read(fcmTokenServiceProvider);
 
   // 4. Inisialisasi FCM token & lifecycle
   await initFcmToken(
     onToken: (token) async {
-      // A. Potong token untuk tampilan debug (12 karakter pertama + ...)
-      final truncatedToken = formatTokenForDebug(token);
-      fcmTokenNotifier.value = truncatedToken;
-
-      debugPrint('FCM Token (Truncated): $truncatedToken');
-
-      // B. [BARU - Praktikum 2/3] Kirim token FCM ke backend kampus via Dio
-      await _registerFcmToken(dio, token);
+      await fcmTokenService.register(token);
     },
   );
 

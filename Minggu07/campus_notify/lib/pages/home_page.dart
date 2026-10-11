@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
+
 import '../messaging/push_service.dart'; // Pastikan path import ini sesuai struktur folder kamu
+import '../routes.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -126,6 +129,15 @@ class HomePage extends StatelessWidget {
               color: Colors.blue,
               title: '3. Kirim via Firebase Console',
               subtitle: 'Tekan Home (App Background) lalu kirim notifikasi dari Console.',
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () => context.go(AppRoutes.announcements),
+                icon: const Icon(Icons.announcement_outlined),
+                label: const Text('Buka Daftar Pengumuman'),
+              ),
             ),
           ],
         ),
