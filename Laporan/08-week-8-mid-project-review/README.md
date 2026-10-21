@@ -149,3 +149,55 @@ Pemeriksaan kode dan otomatisasi sudah lulus. Dua item kolaborasi belum dapat
 ditandai selesai karena bukti tiga komentar review dan issue yang ditutup
 otomatis belum tersedia. Item tersebut perlu dilengkapi pada PR berikutnya,
 bukan diisi berdasarkan asumsi.
+
+## Mini Project / Industry Challenge
+
+Bagian ini mendokumentasikan kelanjutan project portfolio dan bukti disiplin
+kolaborasi pada Week 08. Perubahan dilakukan pada repository yang sama, bukan
+membuat project baru.
+
+### Peta Project dan Teknologi
+
+| Bagian | Dokumentasi |
+|---|---|
+| Project yang dilanjutkan | Portfolio project dari minggu sebelumnya; review Week 08 berfokus pada validasi, testing, CI, dan dokumentasi. |
+| Fitur utama yang diverifikasi | Tampilan profil mahasiswa pada [Minggu01/my_first_app/lib/main.dart](../../Minggu01/my_first_app/lib/main.dart). |
+| Stack yang digunakan | Flutter, Dart, Flutter Test, GitHub Actions, dan Conventional Commits. |
+| Cara menjalankan pemeriksaan | `cd Minggu01/my_first_app`, lalu `flutter pub get`, `flutter analyze`, dan `flutter test`. |
+| Dokumentasi teknis | [review-checklist.md](docs/review-checklist.md) dan [ai_prompt.md](docs/ai_prompt.md). |
+
+### Bukti Persyaratan Challenge
+
+1. **Issue dan PR kecil:** PR [#4](https://github.com/fitraadhim/244107020089-mobile-course/pull/4)
+   dibuat dari branch `feat` menuju `develop` dan sudah di-merge. Issue `#12`
+   tidak tersedia di repository, sehingga hubungan `Closes #12` tidak
+   diklaim sebagai bukti.
+2. **Template PR:** bukti PR dan perubahan tersedia pada
+   [screenshots/PR.png](screenshots/PR.png). Dokumentasi review mencatat
+   masalah, solusi, cara uji, dan keputusan teknis.
+3. **Mesin hijau:** pemeriksaan lokal menghasilkan `flutter analyze` bersih,
+   `dart format --set-exit-if-changed .` bersih, dan `flutter test` lulus.
+   Workflow CI tersedia di
+   [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) dan sudah
+   diarahkan ke folder project Flutter.
+4. **AI verification:** prompt, lima temuan, bukti verifikasi, keputusan
+   penerimaan/penolakan, dan alasan teknis tersedia di
+   [docs/ai_prompt.md](docs/ai_prompt.md) serta bagian
+   [AI Verification Checklist](#ai-verification-checklist).
+5. **Struktur folder portfolio:** folder Week 08 memiliki
+   `README.md`, `docs/`, dan `screenshots/` sesuai kebutuhan dokumentasi.
+
+### Status dan Hasil yang Dicapai
+
+- [x] Pemeriksaan lokal dan test aplikasi berhasil.
+- [x] Workflow CI untuk Pull Request tersedia.
+- [x] Dokumentasi review commit, review AI, dan verifikasi mandiri tersedia.
+- [x] Bukti PR kecil yang sudah di-merge tersedia.
+- [ ] Minimal tiga komentar review bermakna sampai approve belum tercapai pada
+      PR #4 karena PR tersebut tidak memiliki komentar review.
+- [ ] Issue tertutup otomatis belum dapat dibuktikan karena issue `#12` tidak
+      ditemukan.
+
+Kesimpulannya, fondasi teknis dan dokumentasi challenge sudah dikerjakan.
+Persyaratan kolaborasi yang belum memiliki bukti ditandai terbuka agar dapat
+dilengkapi pada PR berikutnya tanpa memalsukan status review.
