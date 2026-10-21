@@ -149,3 +149,109 @@ Pemeriksaan kode dan otomatisasi sudah lulus. Dua item kolaborasi belum dapat
 ditandai selesai karena bukti tiga komentar review dan issue yang ditutup
 otomatis belum tersedia. Item tersebut perlu dilengkapi pada PR berikutnya,
 bukan diisi berdasarkan asumsi.
+
+## Mini Project / Industry Challenge
+
+Bagian ini mendokumentasikan kelanjutan project portfolio dan bukti disiplin
+kolaborasi pada Week 08. Perubahan dilakukan pada repository yang sama, bukan
+membuat project baru.
+
+### Peta Project dan Teknologi
+
+| Bagian | Dokumentasi |
+|---|---|
+| Project yang dilanjutkan | Portfolio project dari minggu sebelumnya; review Week 08 berfokus pada validasi, testing, CI, dan dokumentasi. |
+| Fitur utama yang diverifikasi | Tampilan profil mahasiswa pada [Minggu01/my_first_app/lib/main.dart](../../Minggu01/my_first_app/lib/main.dart). |
+| Stack yang digunakan | Flutter, Dart, Flutter Test, GitHub Actions, dan Conventional Commits. |
+| Cara menjalankan pemeriksaan | `cd Minggu01/my_first_app`, lalu `flutter pub get`, `flutter analyze`, dan `flutter test`. |
+| Dokumentasi teknis | [review-checklist.md](docs/review-checklist.md) dan [ai_prompt.md](docs/ai_prompt.md). |
+
+### Bukti Persyaratan Challenge
+
+1. **Issue dan PR kecil:** PR [#4](https://github.com/fitraadhim/244107020089-mobile-course/pull/4)
+   dibuat dari branch `feat` menuju `develop` dan sudah di-merge. Issue `#12`
+   tidak tersedia di repository, sehingga hubungan `Closes #12` tidak
+   diklaim sebagai bukti.
+2. **Template PR:** bukti PR dan perubahan tersedia pada
+   [screenshots/PR.png](screenshots/PR.png). Dokumentasi review mencatat
+   masalah, solusi, cara uji, dan keputusan teknis.
+3. **Mesin hijau:** pemeriksaan lokal menghasilkan `flutter analyze` bersih,
+   `dart format --set-exit-if-changed .` bersih, dan `flutter test` lulus.
+   Workflow CI tersedia di
+   [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) dan sudah
+   diarahkan ke folder project Flutter.
+4. **AI verification:** prompt, lima temuan, bukti verifikasi, keputusan
+   penerimaan/penolakan, dan alasan teknis tersedia di
+   [docs/ai_prompt.md](docs/ai_prompt.md) serta bagian
+   [AI Verification Checklist](#ai-verification-checklist).
+5. **Struktur folder portfolio:** folder Week 08 memiliki
+   `README.md`, `docs/`, dan `screenshots/` sesuai kebutuhan dokumentasi.
+
+### Status dan Hasil yang Dicapai
+
+- [x] Pemeriksaan lokal dan test aplikasi berhasil.
+- [x] Workflow CI untuk Pull Request tersedia.
+- [x] Dokumentasi review commit, review AI, dan verifikasi mandiri tersedia.
+- [x] Bukti PR kecil yang sudah di-merge tersedia.
+- [ ] Minimal tiga komentar review bermakna sampai approve belum tercapai pada
+      PR #4 karena PR tersebut tidak memiliki komentar review.
+- [ ] Issue tertutup otomatis belum dapat dibuktikan karena issue `#12` tidak
+      ditemukan.
+
+Kesimpulannya, fondasi teknis dan dokumentasi challenge sudah dikerjakan.
+Persyaratan kolaborasi yang belum memiliki bukti ditandai terbuka agar dapat
+dilengkapi pada PR berikutnya tanpa memalsukan status review.
+
+## Refleksi
+
+### 1. Apa beda LGTM buta dengan approve yang bertanggung jawab?
+
+LGTM buta hanya menyatakan bahwa perubahan terlihat baik tanpa memeriksa
+kebenaran kode, test, konfigurasi CI, atau dampaknya terhadap project. Risiko
+untuk tim adalah bug ikut di-merge, CI gagal setelah PR diterima, dan reviewer
+tidak memiliki bukti untuk mempertanggungjawabkan keputusannya.
+
+Approve yang bertanggung jawab dilakukan setelah reviewer membaca diff,
+menjalankan atau memeriksa test, memvalidasi konfigurasi, dan memastikan
+komentar penting sudah ditindaklanjuti. Pada review Week 08, pemeriksaan
+menemukan bahwa CI belum diarahkan ke folder Flutter dan test masih memakai
+template counter lama. Karena itu, perubahan tersebut tidak seharusnya langsung
+di-approve sebelum diperbaiki.
+
+### 2. Kapan memberi status request changes, dan kapan cukup saran?
+
+`Request changes` diberikan jika masalah dapat membuat aplikasi atau CI gagal,
+test tidak merepresentasikan perilaku aplikasi, ada risiko regresi, atau
+perubahan melanggar aturan arsitektur dan keamanan. Temuan seperti CI yang
+menjalankan Flutter dari direktori yang salah dan test counter lama termasuk
+kategori ini.
+
+Saran cukup digunakan untuk perbaikan yang tidak menghalangi fungsi utama,
+misalnya mengunci versi Flutter di CI agar hasil build lebih konsisten atau
+merapikan struktur workflow. Saran tetap perlu dipertimbangkan, tetapi tidak
+selalu menjadi alasan untuk menahan merge.
+
+### 3. Bagian mana dari review AI yang ditolak atau disederhanakan?
+
+Temuan mengenai kemungkinan pelanggaran dependency rule ditolak karena diff
+tidak menyentuh layer `domain`, `data`, atau `presentation` pada arsitektur
+feature-first. Tidak ada bukti bahwa Flutter, Dio, atau SQLite diimpor ke
+domain, sehingga temuan tersebut tidak dapat dianggap sebagai masalah nyata.
+
+Temuan style juga disederhanakan. Perubahan `print` menjadi `debugPrint` memang
+menghilangkan lint `avoid_print`, tetapi tidak dianggap sebagai masalah
+arsitektur atau kebenaran perilaku. Fokus review tetap pada CI, test, dan
+validasi yang berdampak langsung.
+
+### 4. Satu hal konkret yang diperbaiki setelah review sejawat
+
+Perbaikan paling konkret adalah mengganti `widget_test.dart` yang masih
+menguji aplikasi counter bawaan dengan test yang memverifikasi UI profil
+mahasiswa. Dampaknya, test sekarang sesuai dengan perilaku aplikasi yang
+sebenarnya dan tidak lagi gagal karena mencari teks `0`, `1`, atau ikon `add`
+yang tidak ada.
+
+Selain itu, workflow CI diperbaiki agar menggunakan folder
+`Minggu01/my_first_app`, menjalankan `flutter pub get`, lalu menjalankan
+`flutter analyze` dan `flutter test`. Hasil akhirnya adalah analisis bersih
+dan seluruh test lulus secara lokal.
