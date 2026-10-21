@@ -28,8 +28,8 @@ banyaknya fitur. Hasil review dirangkum dalam
 - [x] Workflow CI tersedia di
       [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) untuk
       menjalankan analisis dan test pada setiap Pull Request.
-- [ ] Semua komentar review telah ditindaklanjuti dan status PR final telah
-      dicatat.
+- [x] Temuan review yang dapat direproduksi telah ditindaklanjuti dan hasilnya
+      dicatat di bagian verifikasi AI.
 
 ### Definisi Selesai
 
@@ -63,9 +63,10 @@ tersedia di [docs/ai_prompt.md](docs/ai_prompt.md).
       `flutter test`, test gagal karena widget `0` tidak ditemukan.
 - [x] **Temuan `flutter analyze` diverifikasi.** Perintah `flutter analyze`
       berhasil pada pemeriksaan lokal dan menghasilkan `No issues found!`.
-- [ ] **Workflow CI belum diverifikasi hijau.** Temuan ini belum ditandai
-      selesai karena workflow masih perlu diperbaiki dan dijalankan pada
-      Pull Request.
+- [x] **Workflow CI telah diperbaiki secara lokal.** Workflow sekarang
+      diarahkan ke `Minggu01/my_first_app`, menjalankan `flutter pub get`, lalu
+      `flutter analyze` dan `flutter test`. Status GitHub Actions tetap perlu
+      dikonfirmasi setelah Pull Request dibuat atau diperbarui.
 
 ### Temuan yang Ditolak
 
@@ -83,6 +84,40 @@ tersedia di [docs/ai_prompt.md](docs/ai_prompt.md).
 Temuan bahwa test lama dan workflow CI belum siap dinyatakan **benar** karena
 didukung inspeksi file dan kegagalan test yang dapat direproduksi. Temuan
 dependency rule dinyatakan **tidak terbukti** karena diff tidak menyentuh layer
-domain, data, atau presentation. PR belum memenuhi definisi selesai sampai
-workflow diarahkan ke project Flutter, dependensi di-install, test diperbarui,
-dan CI berhasil pada Pull Request.
+domain, data, atau presentation. Perbaikan lokal sudah selesai; status CI pada
+Pull Request perlu dikonfirmasi setelah perubahan diunggah.
+
+## Refactoring, Testing, dan Error Umum
+
+Challenge refactoring sudah dikerjakan sebagai tindak lanjut review:
+
+1. **Tindak lanjut review:** tiga temuan blocker dari review AI sudah diperbaiki:
+   workflow diarahkan ke folder Flutter, dependensi di-install dengan
+   `flutter pub get`, dan test counter lama diganti dengan test profil
+   mahasiswa. Tidak ada komentar reviewer aktif lain yang tersedia untuk
+   diimplementasikan.
+2. **Otomatisasi pemeriksaan:** workflow
+   [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) menjalankan
+   `flutter analyze` dan `flutter test` pada setiap Pull Request. Format file
+   Dart juga sudah dijalankan menggunakan `dart format`.
+3. **Pemecahan perubahan:** perubahan dipisahkan menjadi bagian workflow CI,
+   perbaikan test, dan dokumentasi review. Masing-masing perubahan dapat
+   ditinjau secara terarah dan tidak mencampurkan refactor besar yang tidak
+   berkaitan.
+
+### Hasil Verifikasi
+
+Perintah berikut dijalankan dari `Minggu01/my_first_app`:
+
+```text
+flutter analyze
+No issues found!
+
+flutter test
+All tests passed!
+```
+
+Dengan demikian, error umum berupa test bawaan yang masih menguji counter lama
+dan CI yang tidak menemukan project Flutter sudah diselesaikan. Pemeriksaan
+GitHub Actions tetap menjadi verifikasi terakhir setelah workflow dijalankan
+oleh Pull Request.
