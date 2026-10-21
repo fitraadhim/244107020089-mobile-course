@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  print('Tombol ditekan pada aplikasi');
+                  debugPrint('Tombol ditekan pada aplikasi');
                 },
                 child: Text('Klik saya untuk menampilkan pesan di console'),
               ),
