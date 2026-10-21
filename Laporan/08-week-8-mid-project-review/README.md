@@ -8,4 +8,7 @@ hasil audit riwayat
 
 ![alt text](<screenshots/Screenshot 2026-10-21 231713.png>)
 
+PR kecil 
+![alt text](screenshots/PR.png)
+nama commit dan isi commit kurang sesuai
 
