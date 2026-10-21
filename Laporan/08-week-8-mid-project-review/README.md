@@ -201,3 +201,57 @@ membuat project baru.
 Kesimpulannya, fondasi teknis dan dokumentasi challenge sudah dikerjakan.
 Persyaratan kolaborasi yang belum memiliki bukti ditandai terbuka agar dapat
 dilengkapi pada PR berikutnya tanpa memalsukan status review.
+
+## Refleksi
+
+### 1. Apa beda LGTM buta dengan approve yang bertanggung jawab?
+
+LGTM buta hanya menyatakan bahwa perubahan terlihat baik tanpa memeriksa
+kebenaran kode, test, konfigurasi CI, atau dampaknya terhadap project. Risiko
+untuk tim adalah bug ikut di-merge, CI gagal setelah PR diterima, dan reviewer
+tidak memiliki bukti untuk mempertanggungjawabkan keputusannya.
+
+Approve yang bertanggung jawab dilakukan setelah reviewer membaca diff,
+menjalankan atau memeriksa test, memvalidasi konfigurasi, dan memastikan
+komentar penting sudah ditindaklanjuti. Pada review Week 08, pemeriksaan
+menemukan bahwa CI belum diarahkan ke folder Flutter dan test masih memakai
+template counter lama. Karena itu, perubahan tersebut tidak seharusnya langsung
+di-approve sebelum diperbaiki.
+
+### 2. Kapan memberi status request changes, dan kapan cukup saran?
+
+`Request changes` diberikan jika masalah dapat membuat aplikasi atau CI gagal,
+test tidak merepresentasikan perilaku aplikasi, ada risiko regresi, atau
+perubahan melanggar aturan arsitektur dan keamanan. Temuan seperti CI yang
+menjalankan Flutter dari direktori yang salah dan test counter lama termasuk
+kategori ini.
+
+Saran cukup digunakan untuk perbaikan yang tidak menghalangi fungsi utama,
+misalnya mengunci versi Flutter di CI agar hasil build lebih konsisten atau
+merapikan struktur workflow. Saran tetap perlu dipertimbangkan, tetapi tidak
+selalu menjadi alasan untuk menahan merge.
+
+### 3. Bagian mana dari review AI yang ditolak atau disederhanakan?
+
+Temuan mengenai kemungkinan pelanggaran dependency rule ditolak karena diff
+tidak menyentuh layer `domain`, `data`, atau `presentation` pada arsitektur
+feature-first. Tidak ada bukti bahwa Flutter, Dio, atau SQLite diimpor ke
+domain, sehingga temuan tersebut tidak dapat dianggap sebagai masalah nyata.
+
+Temuan style juga disederhanakan. Perubahan `print` menjadi `debugPrint` memang
+menghilangkan lint `avoid_print`, tetapi tidak dianggap sebagai masalah
+arsitektur atau kebenaran perilaku. Fokus review tetap pada CI, test, dan
+validasi yang berdampak langsung.
+
+### 4. Satu hal konkret yang diperbaiki setelah review sejawat
+
+Perbaikan paling konkret adalah mengganti `widget_test.dart` yang masih
+menguji aplikasi counter bawaan dengan test yang memverifikasi UI profil
+mahasiswa. Dampaknya, test sekarang sesuai dengan perilaku aplikasi yang
+sebenarnya dan tidak lagi gagal karena mencari teks `0`, `1`, atau ikon `add`
+yang tidak ada.
+
+Selain itu, workflow CI diperbaiki agar menggunakan folder
+`Minggu01/my_first_app`, menjalankan `flutter pub get`, lalu menjalankan
+`flutter analyze` dan `flutter test`. Hasil akhirnya adalah analisis bersih
+dan seluruh test lulus secara lokal.
