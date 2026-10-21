@@ -121,3 +121,31 @@ Dengan demikian, error umum berupa test bawaan yang masih menguji counter lama
 dan CI yang tidak menemukan project Flutter sudah diselesaikan. Pemeriksaan
 GitHub Actions tetap menjadi verifikasi terakhir setelah workflow dijalankan
 oleh Pull Request.
+
+## Checklist Verifikasi Mandiri
+
+Checklist ini digunakan untuk memastikan hasil review dapat dibuktikan secara
+mandiri:
+
+- [x] Branch fitur berasal dari `develop` dan PR kecil sudah dibuat menuju
+      `develop`. PR #4 berstatus merged.
+- [ ] Issue terkait tertutup otomatis melalui PR. Issue `#12` tidak ditemukan
+      pada repository, sehingga klaim penutupan otomatis belum dapat
+      diverifikasi.
+- [ ] Minimal tiga komentar review bermakna sudah ditindaklanjuti sampai
+      approve. Data PR #4 menunjukkan tidak ada komentar review, sehingga
+      persyaratan ini belum terpenuhi.
+- [x] `flutter analyze` bersih: `No issues found!`.
+- [x] `dart format --set-exit-if-changed .` berhasil setelah file Dart
+      dirapikan.
+- [x] `flutter test` hijau: `All tests passed!`.
+- [x] Tabel usulan AI dan keputusan final sudah didokumentasikan di
+      [docs/ai_prompt.md](docs/ai_prompt.md), sedangkan verifikasi hasilnya
+      dicatat pada bagian [AI Verification Checklist](#ai-verification-checklist).
+
+### Status Akhir
+
+Pemeriksaan kode dan otomatisasi sudah lulus. Dua item kolaborasi belum dapat
+ditandai selesai karena bukti tiga komentar review dan issue yang ditutup
+otomatis belum tersedia. Item tersebut perlu dilengkapi pada PR berikutnya,
+bukan diisi berdasarkan asumsi.

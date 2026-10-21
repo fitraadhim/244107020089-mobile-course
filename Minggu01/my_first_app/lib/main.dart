@@ -24,10 +24,7 @@ class MyApp extends StatelessWidget {
                 'Nama Anda: Muhammad Fitra Adhim Nurrochman',
                 style: TextStyle(fontSize: 24),
               ),
-              Text(
-                'NIM: 244107020089',
-                style: TextStyle(fontSize: 24),
-              ),
+              Text('NIM: 244107020089', style: TextStyle(fontSize: 24)),
               ElevatedButton(
                 onPressed: () {
                   debugPrint('Tombol ditekan pada aplikasi');
