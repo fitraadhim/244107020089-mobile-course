@@ -7,6 +7,7 @@ class GetAnnouncements {
 
   final AnnouncementRepository _repository;
 
-  Future<({List<Announcement> announcements, Failure? failure})> call() =>
-      _repository.fetchAnnouncements();
+  Future<({List<Announcement> announcements, Failure? failure})> call({
+    bool forceRefresh = false,
+  }) => _repository.fetchAnnouncements(forceRefresh: forceRefresh);
 }
