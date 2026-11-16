@@ -1,0 +1,68 @@
+{
+  "label": "before",
+  "capturedAt": "2026-11-16T18:36:34.556Z",
+  "scenarioMs": 67031,
+  "memory": {
+    "heapUsageMB": 17.35,
+    "heapCapacityMB": 19,
+    "externalUsageMB": 0.02
+  },
+  "allocation": {
+    "totalBytes": 0,
+    "top": []
+  },
+  "timelineEventCount": 32003,
+  "pipelineItems": 1353,
+  "multiVsync": 450,
+  "platformVsync": 566,
+  "timelineTop": [
+    [
+      "PointerEvent",
+      2096
+    ],
+    [
+      "PipelineItem",
+      1353
+    ],
+    [
+      "Shell::OnPlatformViewDispatchPointerDataPacket",
+      1048
+    ],
+    [
+      "Engine::DispatchPointerDataPacket",
+      1048
+    ],
+    [
+      "DefaultPointerDataDispatcher::DispatchPacket",
+      1048
+    ],
+    [
+      "ScheduleSecondaryCallback",
+      1048
+    ],
+    [
+      "RuntimeController::DispatchPointerDataPacket",
+      1048
+    ],
+    [
+      "ReactorGLES::Operation",
+      628
+    ],
+    [
+      "RenderPassGLES::EncodeCommandsInReactor",
+      604
+    ],
+    [
+      "PlatformVsync",
+      566
+    ],
+    [
+      "ReactorGLES::React",
+      564
+    ],
+    [
+      "ReactOnce",
+      564
+    ]
+  ]
+}
