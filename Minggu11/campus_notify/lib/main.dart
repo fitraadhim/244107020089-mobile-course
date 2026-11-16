@@ -39,27 +39,41 @@ Future<void> handleTerminated(void Function(String route) onRoute) async {
   if (route != null && route.isNotEmpty) onRoute(route);
 }
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
 
-  // 1. [BARU - Praktikum 3] Mendaftarkan Background Handler (Top-level)
-  registerBackgroundHandler();
+  // Initializer wajib tidak boleh memblokir startup. Kegagalan Firebase/GMS
+  // (mis. token tidak bisa diambil saat Play Services belum siap) sebelumnya
+  // membuat aplikasi menggantung di splash screen.
+  try {
+    await Firebase.initializeApp();
+    registerBackgroundHandler();
+  } on Exception catch (error) {
+    debugPrint('Firebase init failed: $error');
+  }
 
   // 2. Minta izin & inisialisasi local notification
-  await requestNotificationPermission();
-  await initLocalNotifications();
+  try {
+    await requestNotificationPermission();
+    await initLocalNotifications();
+  } on Exception catch (error) {
+    debugPrint('Local notification init failed: $error');
+  }
 
   // 3. Buat ProviderContainer agar state Riverpod bisa diisi sebelum UI muncul
   final container = ProviderContainer();
   final fcmTokenService = container.read(fcmTokenServiceProvider);
 
   // 4. Inisialisasi FCM token & lifecycle
-  await initFcmToken(
-    onToken: (token) async {
-      await fcmTokenService.register(token);
-    },
-  );
+  try {
+    await initFcmToken(
+      onToken: (token) async {
+        await fcmTokenService.register(token);
+      },
+    );
+  } on Exception catch (error) {
+    debugPrint('FCM token init failed: $error');
+  }
 
   // 5. Jalankan aplikasi menggunakan UncontrolledProviderScope
   runApp(
